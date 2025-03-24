@@ -12,28 +12,32 @@
         :max="1.0"
         :step="0.01"
         class="slider"
-      />
+      ></input>
     </div>
 
-    <div
-      v-for="(value, key) in colors"
-      :key="key"
-      :style="{ backgroundColor: value }"
-      class="outer"
-    >
-      <div class="content tile">
-        <!-- <h2 class="title"> </h2> -->
-        <div class="inner intro">
-          {{ key }} {{ value }}
-          {{ `${tinycolor(value).getLuminance().toFixed(2)}` }}
-        </div>
-        <div
-          v-for="(value2, key2) in colors"
-          :key="key2"
-          :style="{ color: value2 }"
-        >
-          <div v-if="compare(value, value2)" class="inner">
-            {{ key2 }} {{ value2 }}
+    <div class="grid grid-cols-4 gap-4">
+      <div
+        v-for="(value, key) in colors"
+        :key="key"
+        :style="{ backgroundColor: value }"
+        class="p-2"
+        
+      >
+        <div class="">
+          <!-- <h2 class="title"> </h2> -->
+          <div class="font-bold mb-2">
+            {{ key }} {{ value }}
+            {{ `${tinycolor(value).getLuminance().toFixed(2)}` }}
+          </div>
+
+          <div
+            v-for="(value2, key2) in colors"
+            :key="key2"
+            :style="{ color: value2 }"
+          >
+            <div v-if="compare(value, value2)" class="inner">
+              {{ key2 }} - {{ value2 }} - Hello there dear folks!
+            </div>
           </div>
         </div>
       </div>
@@ -98,18 +102,18 @@ export default {
 </script>
 
 <style lang="scss">
-.outer {
-  padding: 1rem;
-}
-.inner {
-  padding: 0.3rem;
-  &.intro {
-    background: white;
-    color: black;
-    position: relative;
-    left: -1rem;
-  }
-}
+// .outer {
+//   padding: 1rem;
+// }
+// .inner {
+//   padding: 0.3rem;
+//   &.intro {
+//     background: white;
+//     color: black;
+//     position: relative;
+//     left: -1rem;
+//   }
+// }
 </style>
 
 <!-- <template>
