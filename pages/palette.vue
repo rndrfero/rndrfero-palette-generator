@@ -11,10 +11,10 @@
       </ul>
     </div>
 
-    <div class="flex m-2 text-xl">
+    <div class="flex m-2 text-2xl">
       <div>
         Threshold L: {{ thresholdL }} - Threshold E: {{ thresholdE }} &rarr;
-        {{ count }}
+        {{ count }} combinations
       </div>
     </div>
 
@@ -43,36 +43,64 @@
     </div>
 
     <div class="grid grid-cols-4 gap-4 m-2">
-      <div
-        v-for="(row, key) in grid"
-        :key="key"
-        :style="{ backgroundColor: row.color }"
-        class="p-2"
-      >
+      <div v-for="(row, key) in grid" :key="key" class="p-2">
         <div class="">
           <!-- <h2 class="title"> </h2> -->
-          <div class="font-bold mb-2">{{ row.color }}</div>
+          <div class="font-bold mb-2">{{ row.name }} - {{ row.color }}</div>
+          <div>
+            <!-- text: <input v-model="colors[key].isText" type="checkbox" /> bg:
+            <input v-model="colors[key].isBackground" type="checkbox" /> -->
+          </div>
 
           <div
             v-for="(cell, key2) in row.colors"
             :key="key2"
-            :style="{ color: cell.color }"
+            :style="{ color: cell.color, backgroundColor: row.color }"
           >
-            <div v-if="cell.pass" class="inner">
-              Hello there dear folks! - {{ cell.color }} -
+            <div v-if="cell.pass" class="inner text-sm my-1 p-1">
+              Hello there - {{ cell.name }} on {{ row.name }}
+              <!-- Hello there dear folks! - {{ cell.color.color }} -
               {{ cell.deltaE.toFixed(2) }} -
-              {{ cell.deltaL.toFixed(2) }}
+              {{ cell.deltaL.toFixed(2) }} -->
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div>
+      <code class="whitespace-pre">{{ code }}</code>
+    </div>
   </section>
 </template>
 
 <script>
-import { isProxy, toRaw } from 'vue';
-import tinycolor from 'tinycolor2';
+// caflou light colors - new
+// "Light Gray": "#E9EBEE",
+// "Light Red": "#F1D2D2",
+// "Light Orange": "#F1E0D2",
+// "Light Yellow": "#F1EED3",
+// "Light Green": "#E1F1D3",
+// "Light Teal": "#D2F0E4",
+// "Light Blue": "#D2E7F0",
+// "Light Purple": "#D1D5F0",
+// "Light Pink": "#E7D2F0",
+// caflou old colors
+
+// caflou colors - old
+// "#eff1f4";
+// "#cbecdd";
+// "#c5d3f2";
+// "#fac7d2";
+
+// "#fffea8";
+// "#c2cf96";
+// "#dbc5b6";
+// "#caf8fc";
+// "#fdd386";
+// "#f8a3b5";
+
+import { isProxy, toRaw } from "vue";
+import tinycolor from "tinycolor2";
 
 export default {
   async asyncData(context) {
@@ -80,31 +108,201 @@ export default {
   },
   data: () => {
     return {
-      thresholdL: 0.1,
+      thresholdL: 0.47,
       thresholdE: 100,
-      inputColors: {
-        black: '#333333',
-        white: '#FFFFFF',
-        blue: '#5AABD8',
-        blueAlt: '#00ADD8',
-        dark: '#06587E',
-        green: '#488D34',
-        yellow: '#F7A501',
-        yellowAlt: '#B97B00',
-        orange: '#ED5C03',
-        orangeAlt: '#DE2A1B',
-        pink: '#FF9F93',
-        pinkAlt: '#F96D5C',
-      },
+      inputColors: [
+        { name: "Black", color: "#000000", isText: true, isBackground: false },
+        { name: "White", color: "#FFFFFF", isText: true, isBackground: false },
+
+        // original palette
+        { name: "Gray", color: "#eff1f4", isText: false, isBackground: true },
+        { name: "Green", color: "#cbecdd", isText: true, isBackground: true },
+        { name: "Blue", color: "#c5d3f2", isText: true, isBackground: true },
+        { name: "Pink", color: "#fac7d2", isText: true, isBackground: true },
+
+        { name: "Yellow", color: "#fffea8", isText: true, isBackground: true },
+        { name: "Olive", color: "#c2cf96", isText: true, isBackground: true },
+        { name: "Brown", color: "#dbc5b6", isText: true, isBackground: true },
+        { name: "Cyan", color: "#caf8fc", isText: true, isBackground: true },
+        { name: "Orange", color: "#fdd386", isText: true, isBackground: true },
+        { name: "Rose", color: "#f8a3b5", isText: true, isBackground: true },
+
+        // adding saturated dark text:
+        // {
+        //   name: "DkGreen",
+        //   color: "#008700",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+        // {
+        //   name: "DkRed",
+        //   color: "#b50000",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+        // {
+        //   name: "DkBlue",
+        //   color: "#0015b5",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+
+        // -----------------------
+
+        // {
+        //   name: "Dark Gray",
+        //   color: "#666666",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+
+        // {
+        //   name: "Old Light Gray",
+        //   color: "#eff1f4",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Green",
+        //   color: "#cbecdd",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Blue",
+        //   color: "#c5d3f2",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // // {
+        // //   name: "Old Light Red",
+        // //   color: "#fac7d2",
+        // //   isText: true,
+        // //   isBackground: true,
+        // // },
+        // {
+        //   name: "Old Light Yellow",
+        //   color: "#fffea8",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Yellow Plus",
+        //   color: "#fcfb0f",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+        // {
+        //   name: "Old Light Olive",
+        //   color: "#c2cf96",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Brown",
+        //   color: "#dbc5b6",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Cyan",
+        //   color: "#caf8fc",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Orange",
+        //   color: "#fdd386",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Light Pink",
+        //   color: "#f8a3b5",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // // DARK
+        // {
+        //   name: "Old Dark Gray",
+        //   color: "#B3B5B9",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Green",
+        //   color: "#8CC3C5",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Blue",
+        //   color: "#86A8D2",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Yellow",
+        //   color: "#CCCF76",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+        // {
+        //   name: "Old Dark Olive",
+        //   color: "#85A96B",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Brown",
+        //   color: "#A69488",
+        //   isText: false,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Cyan",
+        //   color: "#8AE0E9",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Orange",
+        //   color: "#CCA45C",
+        //   isText: true,
+        //   isBackground: true,
+        // },
+        // {
+        //   name: "Old Dark Pink",
+        //   color: "#C67A8A",
+        //   isText: true,
+        //   isBackground: false,
+        // },
+
+        // black: "#333333",
+        // white: "#FFFFFF",
+
+        // black: "#333333",
+        // white: "#FFFFFF",
+        // blue: '#5AABD8',
+        // blueAlt: '#00ADD8',
+        // dark: '#06587E',
+        // green: '#488D34',
+        // yellow: '#F7A501',
+        // yellowAlt: '#B97B00',
+        // orange: '#ED5C03',
+        // orangeAlt: '#DE2A1B',
+        // pink: '#FF9F93',
+        // pinkAlt: '#F96D5C',
+      ],
       bulma: [
-        'light',
-        'dark',
-        'primary',
-        'info',
-        'link',
-        'success',
-        'warning',
-        'danger',
+        "light",
+        "dark",
+        "primary",
+        "info",
+        "link",
+        "success",
+        "warning",
+        "danger",
       ],
     };
   },
@@ -118,24 +316,30 @@ export default {
 
       // this.count = 0;
 
-      Object.values(this.inputColors).forEach(bg => {
-        const row = { color: bg, colors: [] };
+      this.inputColors.forEach(({ name, color, isBackground }) => {
+        if (!isBackground) {
+          return;
+        }
 
-        Object.values(this.inputColors).forEach(color => {
-          const deltaE = this.calculateDeltaE(bg, color);
-          const deltaL = this.calculateDeltaL(bg, color);
-          const pass = this.compare(bg, color);
+        const row = { name, color, colors: [] };
+
+        this.inputColors.forEach((x) => {
+          if (!x.isText) {
+            return;
+          }
+          const color2 = x.color;
+
+          const deltaE = this.calculateDeltaE(color, color2);
+          const deltaL = this.calculateDeltaL(color, color2);
+          const pass = this.compare(color, color2);
 
           row.colors.push({
-            color,
+            color: color2,
+            name: x.name,
             deltaE,
             deltaL,
             pass,
           });
-
-          // if (pass) {
-          //   this.count++;
-          // }
         });
         ret.push(row);
       });
@@ -144,15 +348,40 @@ export default {
     },
     count() {
       return this.grid.reduce((total, row) => {
-        return total + row.colors.filter(cell => cell.pass).length;
+        return total + row.colors.filter((cell) => cell.pass).length;
       }, 0);
+    },
+    code() {
+      let ret = "";
+
+      this.inputColors.forEach(({ name, color, isBackground }) => {
+        if (!isBackground) {
+          return;
+        }
+
+        this.inputColors.forEach((x) => {
+          const color2 = x.color;
+
+          const pass = this.compare(color, color2);
+          if (!x.isText || !pass) {
+            return;
+          }
+
+          ret +=
+            "{backgroundColor: '" + color + "', color: '" + color2 + "' },";
+          ret += " // " + x.name + " on " + name + "\n";
+        });
+      });
+
+      return ret;
     },
   },
 
   methods: {
     compare(col1, col2) {
       return (
-        this.calculateDeltaE(col1, col2) > this.thresholdE &&
+        // this.calculateDeltaE(col1, col2) > this.thresholdE
+        //  &&
         this.calculateDeltaL(col1, col2) > this.thresholdL
       );
       // return (
