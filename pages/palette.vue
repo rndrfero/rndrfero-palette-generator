@@ -47,8 +47,23 @@
     <div class="m-2">
       <div class="font-bold mb-2">Colors</div>
       <div class="flex flex-wrap gap-2">
-        <div v-for="(color, key) in colors" :key="key" class="p-2 w-full max-w-[300px]">
-          <div class="font-bold mb-2">{{ colorName(color.value) }} - {{ color.value }}</div>
+        <div v-for="(color, key) in colors" :key="key" class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100">
+          <div class="font-bold mb-2 flex items-center gap-2">            
+            <input 
+              type="color" 
+              v-model="color.value"
+              class="w-8 h-8 rounded cursor-pointer"
+            />
+            {{ colorName(color.value) }} - {{ color.value }}
+            <button 
+              @click="removeColor(key)"
+              class="ml-auto text-red-500 hover:text-red-700 text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Remove color"
+              :disabled="!canRemoveColors"
+            >
+              ×
+            </button>
+          </div>
           <div class="flex gap-4">
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="color.isText" />
@@ -59,6 +74,17 @@
               <span>Background</span>
             </label>
           </div>
+        </div>
+
+        <!-- Add new color -->
+        <div class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100 border-dashed flex items-center justify-center">
+          <button 
+            @click="addColor"
+            class="text-green-500 hover:text-green-700 text-3xl"
+            title="Add random color"
+          >
+            +
+          </button>
         </div>
       </div>  
     </div>
@@ -99,18 +125,17 @@ export default {
       thresholdL: 0.3,
       thresholdE: 100,
       colors: [
-        { value: "#333333", isText: true, isBackground: true }, // black
-        { value: "#FFFFFF", isText: true, isBackground: true }, // white
-        { value: "#5AABD8", isText: true, isBackground: true }, // blue
-        { value: "#00ADD8", isText: true, isBackground: true }, // blueAlt
-        { value: "#06587E", isText: true, isBackground: true }, // dark
-        { value: "#488D34", isText: true, isBackground: true }, // green
-        { value: "#F7A501", isText: true, isBackground: true }, // yellow
-        { value: "#B97B00", isText: true, isBackground: true }, // yellowAlt
-        { value: "#ED5C03", isText: true, isBackground: true }, // orange
-        { value: "#DE2A1B", isText: true, isBackground: true }, // orangeAlt
-        { value: "#FF9F93", isText: true, isBackground: true }, // pink
-        { value: "#F96D5C", isText: true, isBackground: true }, // pinkAlt
+        { value: "#333333", isText: true, isBackground: true }, 
+        { value: "#FFFFFF", isText: true, isBackground: false },
+        { value: "#00ADD8", isText: true, isBackground: true }, 
+        { value: "#06587E", isText: true, isBackground: true }, 
+        { value: "#488D34", isText: true, isBackground: true }, 
+        { value: "#F7A501", isText: true, isBackground: true }, 
+        { value: "#B97B00", isText: true, isBackground: true }, 
+        { value: "#ED5C03", isText: true, isBackground: true }, 
+        { value: "#DE2A1B", isText: true, isBackground: true }, 
+        { value: "#FF9F93", isText: true, isBackground: true }, 
+        { value: "#F96D5C", isText: true, isBackground: true }, 
       ]      
     };
   },
@@ -121,6 +146,9 @@ export default {
     },
     textColors() {
       return this.colors.filter(({ isText }) => isText);
+    },
+    canRemoveColors() {
+      return this.colors.length >= 4;
     },
     grid() {
       return this.backgroundColors
@@ -164,6 +192,16 @@ export default {
       return calculateDeltaL(col1, col2) > this.thresholdL;
     },
     colorName(color) { return ntc.name(color)[1]; },
+    removeColor(index) {
+      this.colors.splice(index, 1);
+    },
+    addColor() {
+      this.colors.push({
+        value: tinycolor.random().toHexString(),
+        isText: true,
+        isBackground: true
+      });
+    },
   },
 };
 </script>
