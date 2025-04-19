@@ -48,13 +48,20 @@
       <div class="font-bold mb-2">Colors</div>
       <div class="flex flex-wrap gap-2">
         <div v-for="(color, key) in colors" :key="key" class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100">
-          <div class="font-bold mb-2 flex items-center gap-2">            
+          <div class="mb-2 flex items-center gap-2">            
             <input 
               type="color" 
               v-model="color.value"
               class="w-8 h-8 rounded cursor-pointer"
             />
-            {{ colorName(color.value) }} - {{ color.value }}
+            <input 
+              type="text" 
+              v-model="color.value"
+              class="w-20 px-1 rounded border border-gray-300 bg-white"
+              pattern="^#[0-9A-Fa-f]{6}$"
+              title="Hex color code (e.g. #FF0000)"
+            />
+            <span class="font-bold">{{ colorName(color.value) }}</span>
             <button 
               @click="removeColor(key)"
               class="ml-auto text-red-500 hover:text-red-700 text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
