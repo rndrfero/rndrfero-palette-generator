@@ -1,51 +1,17 @@
 <template>
-  <section class="section">
-    <div class="m-2">
-      <h1 class="text-xl">rndrfero's Typography Contrast Palette Tool</h1>
+  <section class="m-2">
+    <div class="my-4">
+      <div class="font-bold mb-2 text-2xl">rndrfero's Typography Contrast Palette Combinator</div>
     </div>
 
-    <div class="m-2">
-      <ul>
-        <li>L = luminance</li>
-        <li>E = color difference metric - Delta E in the CIELAB color space</li>
-      </ul>
-    </div>
-
-    <div class="flex m-2 text-2xl">
-      <div>
-        Threshold L: {{ thresholdL }} - Threshold E: {{ thresholdE }} &rarr;
-        {{ count }} combinations
-      </div>
-    </div>
-
-    <div class="flex m-2">
-      <div class="mx-2">
-        <input
-          v-model="thresholdL"
-          type="range"
-          :min="0.0"
-          :max="1.0"
-          :step="0.01"
-          class="slider"
-        />
-      </div>
-
-      <div class="mx-2">
-        <input
-          v-model="thresholdE"
-          type="range"
-          :min="0.0"
-          :max="200.0"
-          :step="1"
-          class="slider"
-        />
-      </div>
+    <div class="my-2">
+      Generate a text / background color combinantion palette based on luminance contrast of a given threshold.
     </div>
 
     <!-- COLORS -->
 
-    <div class="m-2">
-      <div class="font-bold mb-2">Colors</div>
+    <div class="my-8">
+      <div class="font-bold mb-2 text-2xl">The Palette</div>
       <div class="flex flex-wrap gap-2">
         <div v-for="(color, key) in colors" :key="key" class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100">
           <div class="mb-2 flex items-center gap-2">            
@@ -96,22 +62,46 @@
       </div>  
     </div>
 
-    <!-- COLOR COMBINATIONS -->
+    <!-- PARAMETERS -->
 
-    <div class="flex flex-wrap gap">
-      <div v-for="(row, key) in grid" :key="key" class="p-2 w-full max-w-[300px]">
-          <div
-            v-for="(textColor, key2) in row.colors"
-            :key="key2"
-            :style="{ color: textColor, backgroundColor: row.color }"
-          >
-            <div class="inner text-sm my-1 p-1">
-              {{ colorName(textColor) }} on {{ colorName(row.color) }}
-            </div>
-          </div>
+    <div class="my-8">
+      <div class="font-bold mb-2 text-2xl">Luminance contrast</div>
+      <div>
+        Luminance delta threshold: 
+        <input
+          v-model="thresholdL"
+          type="range"
+          :min="0.0"
+          :max="1.0"
+          :step="0.01"
+          class="slider"
+        />
+        {{ thresholdL }}
       </div>
     </div>
-    <div>
+
+    <!-- COLOR COMBINATIONS -->
+     
+    <div class="my-8">
+      <div class="font-bold mb-2 text-2xl">Combinations: {{ count }}</div>
+
+      <div class="flex flex-wrap gap">
+        <div v-for="(row, key) in grid" :key="key" class="p-2 w-full max-w-[300px]">
+            <div
+              v-for="(textColor, key2) in row.colors"
+              :key="key2"
+              :style="{ color: textColor, backgroundColor: row.color }"
+            >
+              <div class="inner text-sm my-1 p-1">
+                {{ colorName(textColor) }} on {{ colorName(row.color) }}
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-8">
+      <div class="font-bold mb-2 text-2xl">Javascript code</div>
       <code class="whitespace-pre">{{ code }}</code>
     </div>
   </section>
@@ -173,11 +163,11 @@ export default {
     },
     count() {
       return this.grid.reduce((total, row) => {
-        return total + row.colors.filter((cell) => cell.pass).length;
+        return total + row.colors.length;
       }, 0);
     },
     code() {
-      let ret = "";
+      let ret = "const palette = [\n";
 
       this.backgroundColors.forEach(({ value }) => {
         this.textColors.forEach((inputColor) => {
@@ -185,12 +175,12 @@ export default {
             return;
           }
 
-          ret += `{backgroundColor: '${value}', color: '${inputColor.value}' },`
-          ret += `// ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
+          ret += `  { backgroundColor: '${value}', color: '${inputColor.value}' },`
+          ret += ` // ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
         });
       });
 
-      return ret;
+      return ret + "];";
     },
   },
 
