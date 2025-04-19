@@ -85,21 +85,18 @@ export default {
       thresholdL: 0.47,
       thresholdE: 100,
       colors: [
-        { value: "#000000", isText: true, isBackground: true },
-        { value: "#FFFFFF", isText: true, isBackground: true },
-
-        // original palette
-        { value: "#eff1f4", isText: true, isBackground: true },
-        { value: "#cbecdd", isText: true, isBackground: true },
-        { value: "#c5d3f2", isText: true, isBackground: true },
-        { value: "#fac7d2", isText: true, isBackground: true },
-
-        { value: "#fffea8", isText: true, isBackground: true },
-        { value: "#c2cf96", isText: true, isBackground: true },
-        { value: "#dbc5b6", isText: true, isBackground: true },
-        { value: "#caf8fc", isText: true, isBackground: true },
-        { value: "#fdd386", isText: true, isBackground: true },
-        { value: "#f8a3b5", isText: true, isBackground: true },
+        { value: "#333333", isText: true, isBackground: true }, // black
+        { value: "#FFFFFF", isText: true, isBackground: true }, // white
+        { value: "#5AABD8", isText: true, isBackground: true }, // blue
+        { value: "#00ADD8", isText: true, isBackground: true }, // blueAlt
+        { value: "#06587E", isText: true, isBackground: true }, // dark
+        { value: "#488D34", isText: true, isBackground: true }, // green
+        { value: "#F7A501", isText: true, isBackground: true }, // yellow
+        { value: "#B97B00", isText: true, isBackground: true }, // yellowAlt
+        { value: "#ED5C03", isText: true, isBackground: true }, // orange
+        { value: "#DE2A1B", isText: true, isBackground: true }, // orangeAlt
+        { value: "#FF9F93", isText: true, isBackground: true }, // pink
+        { value: "#F96D5C", isText: true, isBackground: true }, // pinkAlt
       ]      
     };
   },
