@@ -128,7 +128,6 @@ export default {
         { value: "#06587E", isText: true, isBackground: true }, 
         { value: "#488D34", isText: true, isBackground: true }, 
         { value: "#F7A501", isText: true, isBackground: true }, 
-        { value: "#B97B00", isText: true, isBackground: true }, 
         { value: "#ED5C03", isText: true, isBackground: true }, 
         { value: "#DE2A1B", isText: true, isBackground: true }, 
         { value: "#FF9F93", isText: true, isBackground: true }, 
