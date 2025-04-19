@@ -87,22 +87,22 @@ export default {
     return {
       thresholdL: 0.47,
       thresholdE: 100,
-      inputColors: [
-        { color: "#000000", isText: true, isBackground: false },
-        { color: "#FFFFFF", isText: true, isBackground: false },
+      colors: [
+        { value: "#000000", isText: true, isBackground: false },
+        { value: "#FFFFFF", isText: true, isBackground: false },
 
         // original palette
-        { color: "#eff1f4", isText: false, isBackground: true },
-        { color: "#cbecdd", isText: true, isBackground: true },
-        { color: "#c5d3f2", isText: true, isBackground: true },
-        { color: "#fac7d2", isText: true, isBackground: true },
+        { value: "#eff1f4", isText: false, isBackground: true },
+        { value: "#cbecdd", isText: true, isBackground: true },
+        { value: "#c5d3f2", isText: true, isBackground: true },
+        { value: "#fac7d2", isText: true, isBackground: true },
 
-        { color: "#fffea8", isText: true, isBackground: true },
-        { color: "#c2cf96", isText: true, isBackground: true },
-        { color: "#dbc5b6", isText: true, isBackground: true },
-        { color: "#caf8fc", isText: true, isBackground: true },
-        { color: "#fdd386", isText: true, isBackground: true },
-        { color: "#f8a3b5", isText: true, isBackground: true },
+        { value: "#fffea8", isText: true, isBackground: true },
+        { value: "#c2cf96", isText: true, isBackground: true },
+        { value: "#dbc5b6", isText: true, isBackground: true },
+        { value: "#caf8fc", isText: true, isBackground: true },
+        { value: "#fdd386", isText: true, isBackground: true },
+        { value: "#f8a3b5", isText: true, isBackground: true },
       ]      
     };
   },
@@ -114,19 +114,19 @@ export default {
     grid() {
       const ret = [];
 
-      this.inputColors.forEach(({ color, isBackground }) => {
+      this.colors.forEach(({ value, isBackground }) => {
         if (!isBackground) {
           return;
         }
 
-        const row = { color, colors: [] };
+        const row = { color: value, colors: [] };
 
-        this.inputColors.forEach((x) => {
+        this.colors.forEach((x) => {
           if (!x.isText) {
             return;
           }
-          const color2 = x.color;
-          const pass = this.compare(color, color2);
+          const color2 = x.value;
+          const pass = this.compare(value, color2);
 
           row.colors.push({
             color: color2,
@@ -146,15 +146,15 @@ export default {
     code() {
       let ret = "";
 
-      this.inputColors.filter(({ isBackground }) => isBackground).forEach(({ color }) => {
-        this.inputColors.filter(({ isText }) => isText).forEach((inputColor) => {
+      this.colors.filter(({ isBackground }) => isBackground).forEach(({ value }) => {
+        this.colors.filter(({ isText }) => isText).forEach((inputColor) => {
           
-          if (!this.compare(color, inputColor.color)) {
+          if (!this.compare(value, inputColor.value)) {
             return;
           }
 
-          ret += `{backgroundColor: '${color}', color: '${inputColor.color}' },`
-          ret += `// ${this.colorName(color)} on ${this.colorName(inputColor.color)}\n`;
+          ret += `{backgroundColor: '${value}', color: '${inputColor.value}' },`
+          ret += `// ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
         });
       });
 
