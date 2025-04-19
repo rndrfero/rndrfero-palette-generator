@@ -111,32 +111,25 @@ export default {
     tinycolor() {
       return tinycolor;
     },
+    backgroundColors() {
+      return this.colors.filter(({ isBackground }) => isBackground);
+    },
+    textColors() {
+      return this.colors.filter(({ isText }) => isText);
+    },
     grid() {
-      const ret = [];
-
-      this.colors.forEach(({ value, isBackground }) => {
-        if (!isBackground) {
-          return;
-        }
-
+      return this.backgroundColors.map(({ value }) => {
         const row = { color: value, colors: [] };
-
-        this.colors.forEach((x) => {
-          if (!x.isText) {
-            return;
-          }
-          const color2 = x.value;
-          const pass = this.compare(value, color2);
-
+        
+        this.textColors.forEach((x) => {
+          const pass = this.compare(value, x.value);
           row.colors.push({
-            color: color2,
+            color: x.value,
             pass,
           });
         });
-        ret.push(row);
+        return row;
       });
-
-      return ret;
     },
     count() {
       return this.grid.reduce((total, row) => {
@@ -146,9 +139,8 @@ export default {
     code() {
       let ret = "";
 
-      this.colors.filter(({ isBackground }) => isBackground).forEach(({ value }) => {
-        this.colors.filter(({ isText }) => isText).forEach((inputColor) => {
-          
+      this.backgroundColors.forEach(({ value }) => {
+        this.textColors.forEach((inputColor) => {
           if (!this.compare(value, inputColor.value)) {
             return;
           }
