@@ -46,7 +46,7 @@
       <div v-for="(row, key) in grid" :key="key" class="p-2">
         <div class="">
           <!-- <h2 class="title"> </h2> -->
-          <div class="font-bold mb-2">{{ row.name }} - {{ row.color }}</div>
+          <div class="font-bold mb-2">{{ getColorName(row.color) }} - {{ row.color }}</div>
           <div>
             <!-- text: <input v-model="colors[key].isText" type="checkbox" /> bg:
             <input v-model="colors[key].isBackground" type="checkbox" /> -->
@@ -58,7 +58,7 @@
             :style="{ color: cell.color, backgroundColor: row.color }"
           >
             <div v-if="cell.pass" class="inner text-sm my-1 p-1">
-              Hello there - {{ cell.name }} on {{ row.name }}
+              Hello there - {{ getColorName(cell.color) }} on {{ getColorName(row.color) }}
               <!-- Hello there dear folks! - {{ cell.color.color }} -
               {{ cell.deltaE.toFixed(2) }} -
               {{ cell.deltaL.toFixed(2) }} -->
@@ -101,6 +101,7 @@
 
 import { isProxy, toRaw } from "vue";
 import tinycolor from "tinycolor2";
+import ntc from '~/utils/ntc';
 
 export default {
   async asyncData(context) {
@@ -111,199 +112,22 @@ export default {
       thresholdL: 0.47,
       thresholdE: 100,
       inputColors: [
-        { name: "Black", color: "#000000", isText: true, isBackground: false },
-        { name: "White", color: "#FFFFFF", isText: true, isBackground: false },
+        { color: "#000000", isText: true, isBackground: false },
+        { color: "#FFFFFF", isText: true, isBackground: false },
 
         // original palette
-        { name: "Gray", color: "#eff1f4", isText: false, isBackground: true },
-        { name: "Green", color: "#cbecdd", isText: true, isBackground: true },
-        { name: "Blue", color: "#c5d3f2", isText: true, isBackground: true },
-        { name: "Pink", color: "#fac7d2", isText: true, isBackground: true },
+        { color: "#eff1f4", isText: false, isBackground: true },
+        { color: "#cbecdd", isText: true, isBackground: true },
+        { color: "#c5d3f2", isText: true, isBackground: true },
+        { color: "#fac7d2", isText: true, isBackground: true },
 
-        { name: "Yellow", color: "#fffea8", isText: true, isBackground: true },
-        { name: "Olive", color: "#c2cf96", isText: true, isBackground: true },
-        { name: "Brown", color: "#dbc5b6", isText: true, isBackground: true },
-        { name: "Cyan", color: "#caf8fc", isText: true, isBackground: true },
-        { name: "Orange", color: "#fdd386", isText: true, isBackground: true },
-        { name: "Rose", color: "#f8a3b5", isText: true, isBackground: true },
-
-        // adding saturated dark text:
-        // {
-        //   name: "DkGreen",
-        //   color: "#008700",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-        // {
-        //   name: "DkRed",
-        //   color: "#b50000",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-        // {
-        //   name: "DkBlue",
-        //   color: "#0015b5",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-
-        // -----------------------
-
-        // {
-        //   name: "Dark Gray",
-        //   color: "#666666",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-
-        // {
-        //   name: "Old Light Gray",
-        //   color: "#eff1f4",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Green",
-        //   color: "#cbecdd",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Blue",
-        //   color: "#c5d3f2",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // // {
-        // //   name: "Old Light Red",
-        // //   color: "#fac7d2",
-        // //   isText: true,
-        // //   isBackground: true,
-        // // },
-        // {
-        //   name: "Old Light Yellow",
-        //   color: "#fffea8",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Yellow Plus",
-        //   color: "#fcfb0f",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-        // {
-        //   name: "Old Light Olive",
-        //   color: "#c2cf96",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Brown",
-        //   color: "#dbc5b6",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Cyan",
-        //   color: "#caf8fc",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Orange",
-        //   color: "#fdd386",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Light Pink",
-        //   color: "#f8a3b5",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // // DARK
-        // {
-        //   name: "Old Dark Gray",
-        //   color: "#B3B5B9",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Green",
-        //   color: "#8CC3C5",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Blue",
-        //   color: "#86A8D2",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Yellow",
-        //   color: "#CCCF76",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-        // {
-        //   name: "Old Dark Olive",
-        //   color: "#85A96B",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Brown",
-        //   color: "#A69488",
-        //   isText: false,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Cyan",
-        //   color: "#8AE0E9",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Orange",
-        //   color: "#CCA45C",
-        //   isText: true,
-        //   isBackground: true,
-        // },
-        // {
-        //   name: "Old Dark Pink",
-        //   color: "#C67A8A",
-        //   isText: true,
-        //   isBackground: false,
-        // },
-
-        // black: "#333333",
-        // white: "#FFFFFF",
-
-        // black: "#333333",
-        // white: "#FFFFFF",
-        // blue: '#5AABD8',
-        // blueAlt: '#00ADD8',
-        // dark: '#06587E',
-        // green: '#488D34',
-        // yellow: '#F7A501',
-        // yellowAlt: '#B97B00',
-        // orange: '#ED5C03',
-        // orangeAlt: '#DE2A1B',
-        // pink: '#FF9F93',
-        // pinkAlt: '#F96D5C',
-      ],
-      bulma: [
-        "light",
-        "dark",
-        "primary",
-        "info",
-        "link",
-        "success",
-        "warning",
-        "danger",
-      ],
+        { color: "#fffea8", isText: true, isBackground: true },
+        { color: "#c2cf96", isText: true, isBackground: true },
+        { color: "#dbc5b6", isText: true, isBackground: true },
+        { color: "#caf8fc", isText: true, isBackground: true },
+        { color: "#fdd386", isText: true, isBackground: true },
+        { color: "#f8a3b5", isText: true, isBackground: true },
+      ]      
     };
   },
 
@@ -316,12 +140,12 @@ export default {
 
       // this.count = 0;
 
-      this.inputColors.forEach(({ name, color, isBackground }) => {
+      this.inputColors.forEach(({ color, isBackground }) => {
         if (!isBackground) {
           return;
         }
 
-        const row = { name, color, colors: [] };
+        const row = { color, colors: [] };
 
         this.inputColors.forEach((x) => {
           if (!x.isText) {
@@ -335,9 +159,6 @@ export default {
 
           row.colors.push({
             color: color2,
-            name: x.name,
-            deltaE,
-            deltaL,
             pass,
           });
         });
@@ -354,7 +175,7 @@ export default {
     code() {
       let ret = "";
 
-      this.inputColors.forEach(({ name, color, isBackground }) => {
+      this.inputColors.forEach(({ color, isBackground }) => {
         if (!isBackground) {
           return;
         }
@@ -462,6 +283,11 @@ export default {
         this.tinycolor(color1).getLuminance() -
           this.tinycolor(color2).getLuminance()
       );
+    },
+
+    getColorName(color) {
+      const colorInfo = ntc.name(color);
+      return colorInfo[1]; // Returns the color name
     },
 
     // Example usage:
