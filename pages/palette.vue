@@ -42,26 +42,40 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-4 m-2">
-      <div v-for="(row, key) in grid" :key="key" class="p-2">
-        <div class="">
-          <!-- <h2 class="title"> </h2> -->
-          <div class="font-bold mb-2">{{ colorName(row.color) }} - {{ row.color }}</div>
-          <div>
-            <!-- text: <input v-model="colors[key].isText" type="checkbox" /> bg:
-            <input v-model="colors[key].isBackground" type="checkbox" /> -->
-          </div>
+    <!-- COLORS -->
 
-          <div
-            v-for="(cellColor, key2) in row.colors"
-            :key="key2"
-            :style="{ color: cellColor, backgroundColor: row.color }"
-          >
-            <div class="inner text-sm my-1 p-1">
-              Hello there - {{ colorName(cellColor) }} on {{ colorName(row.color) }}
-            </div>
+    <div class="m-2">
+      <div class="font-bold mb-2">Colors</div>
+      <div class="flex flex-wrap gap-2">
+        <div v-for="(color, key) in colors" :key="key" class="p-2 w-full max-w-[300px]">
+          <div class="font-bold mb-2">{{ colorName(color.value) }} - {{ color.value }}</div>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" v-model="color.isText" />
+              <span>Text</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input type="checkbox" v-model="color.isBackground" />
+              <span>Background</span>
+            </label>
           </div>
         </div>
+      </div>  
+    </div>
+
+    <!-- COLOR COMBINATIONS -->
+
+    <div class="flex flex-wrap gap">
+      <div v-for="(row, key) in grid" :key="key" class="p-2 w-full max-w-[300px]">
+          <div
+            v-for="(textColor, key2) in row.colors"
+            :key="key2"
+            :style="{ color: textColor, backgroundColor: row.color }"
+          >
+            <div class="inner text-sm my-1 p-1">
+              {{ colorName(textColor) }} on {{ colorName(row.color) }}
+            </div>
+          </div>
       </div>
     </div>
     <div>
@@ -82,7 +96,7 @@ export default {
   },
   data: () => {
     return {
-      thresholdL: 0.47,
+      thresholdL: 0.3,
       thresholdE: 100,
       colors: [
         { value: "#333333", isText: true, isBackground: true }, // black
@@ -102,9 +116,6 @@ export default {
   },
 
   computed: {
-    tinycolor() {
-      return tinycolor;
-    },
     backgroundColors() {
       return this.colors.filter(({ isBackground }) => isBackground);
     },
@@ -112,16 +123,18 @@ export default {
       return this.colors.filter(({ isText }) => isText);
     },
     grid() {
-      return this.backgroundColors.map(({ value }) => {
-        const row = { color: value, colors: [] };
-        
-        this.textColors.forEach((x) => {
-          if (this.compare(value, x.value)) {
-            row.colors.push(x.value);
-          }
-        });
-        return row;
-      });
+      return this.backgroundColors
+        .map(({ value }) => {
+          const row = { color: value, colors: [] };
+          
+          this.textColors.forEach((x) => {
+            if (this.compare(value, x.value)) {
+              row.colors.push(x.value);
+            }
+          });
+          return row;
+        })
+        .filter(row => row.colors.length > 0);
     },
     count() {
       return this.grid.reduce((total, row) => {
