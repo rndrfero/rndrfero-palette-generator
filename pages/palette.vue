@@ -53,15 +53,12 @@
           </div>
 
           <div
-            v-for="(cell, key2) in row.colors"
+            v-for="(cellColor, key2) in row.colors"
             :key="key2"
-            :style="{ color: cell.color, backgroundColor: row.color }"
+            :style="{ color: cellColor, backgroundColor: row.color }"
           >
-            <div v-if="cell.pass" class="inner text-sm my-1 p-1">
-              Hello there - {{ colorName(cell.color) }} on {{ colorName(row.color) }}
-              <!-- Hello there dear folks! - {{ cell.color.color }} -
-              {{ cell.deltaE.toFixed(2) }} -
-              {{ cell.deltaL.toFixed(2) }} -->
+            <div class="inner text-sm my-1 p-1">
+              Hello there - {{ colorName(cellColor) }} on {{ colorName(row.color) }}
             </div>
           </div>
         </div>
@@ -88,11 +85,11 @@ export default {
       thresholdL: 0.47,
       thresholdE: 100,
       colors: [
-        { value: "#000000", isText: true, isBackground: false },
-        { value: "#FFFFFF", isText: true, isBackground: false },
+        { value: "#000000", isText: true, isBackground: true },
+        { value: "#FFFFFF", isText: true, isBackground: true },
 
         // original palette
-        { value: "#eff1f4", isText: false, isBackground: true },
+        { value: "#eff1f4", isText: true, isBackground: true },
         { value: "#cbecdd", isText: true, isBackground: true },
         { value: "#c5d3f2", isText: true, isBackground: true },
         { value: "#fac7d2", isText: true, isBackground: true },
@@ -122,11 +119,9 @@ export default {
         const row = { color: value, colors: [] };
         
         this.textColors.forEach((x) => {
-          const pass = this.compare(value, x.value);
-          row.colors.push({
-            color: x.value,
-            pass,
-          });
+          if (this.compare(value, x.value)) {
+            row.colors.push(x.value);
+          }
         });
         return row;
       });
