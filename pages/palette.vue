@@ -46,7 +46,7 @@
       <div v-for="(row, key) in grid" :key="key" class="p-2">
         <div class="">
           <!-- <h2 class="title"> </h2> -->
-          <div class="font-bold mb-2">{{ getColorName(row.color) }} - {{ row.color }}</div>
+          <div class="font-bold mb-2">{{ colorName(row.color) }} - {{ row.color }}</div>
           <div>
             <!-- text: <input v-model="colors[key].isText" type="checkbox" /> bg:
             <input v-model="colors[key].isBackground" type="checkbox" /> -->
@@ -58,7 +58,7 @@
             :style="{ color: cell.color, backgroundColor: row.color }"
           >
             <div v-if="cell.pass" class="inner text-sm my-1 p-1">
-              Hello there - {{ getColorName(cell.color) }} on {{ getColorName(row.color) }}
+              Hello there - {{ colorName(cell.color) }} on {{ colorName(row.color) }}
               <!-- Hello there dear folks! - {{ cell.color.color }} -
               {{ cell.deltaE.toFixed(2) }} -
               {{ cell.deltaL.toFixed(2) }} -->
@@ -74,34 +74,10 @@
 </template>
 
 <script>
-// caflou light colors - new
-// "Light Gray": "#E9EBEE",
-// "Light Red": "#F1D2D2",
-// "Light Orange": "#F1E0D2",
-// "Light Yellow": "#F1EED3",
-// "Light Green": "#E1F1D3",
-// "Light Teal": "#D2F0E4",
-// "Light Blue": "#D2E7F0",
-// "Light Purple": "#D1D5F0",
-// "Light Pink": "#E7D2F0",
-// caflou old colors
-
-// caflou colors - old
-// "#eff1f4";
-// "#cbecdd";
-// "#c5d3f2";
-// "#fac7d2";
-
-// "#fffea8";
-// "#c2cf96";
-// "#dbc5b6";
-// "#caf8fc";
-// "#fdd386";
-// "#f8a3b5";
-
 import { isProxy, toRaw } from "vue";
 import tinycolor from "tinycolor2";
 import ntc from '~/utils/ntc';
+import { calculateDeltaL } from '~/utils/ColorMath';
 
 export default {
   async asyncData(context) {
@@ -138,8 +114,6 @@ export default {
     grid() {
       const ret = [];
 
-      // this.count = 0;
-
       this.inputColors.forEach(({ color, isBackground }) => {
         if (!isBackground) {
           return;
@@ -152,9 +126,6 @@ export default {
             return;
           }
           const color2 = x.color;
-
-          const deltaE = this.calculateDeltaE(color, color2);
-          const deltaL = this.calculateDeltaL(color, color2);
           const pass = this.compare(color, color2);
 
           row.colors.push({
@@ -200,129 +171,13 @@ export default {
 
   methods: {
     compare(col1, col2) {
-      return (
-        // this.calculateDeltaE(col1, col2) > this.thresholdE
-        //  &&
-        this.calculateDeltaL(col1, col2) > this.thresholdL
-      );
-      // return (
-      //   Math.abs(
-      //     this.tinycolor(col1).getLuminance() -
-      //       this.tinycolor(col2).getLuminance()
-      //   ) > this.threshold
-      // );
+      return calculateDeltaL(col1, col2) > this.thresholdL;
     },
-
-    // Helper: Convert sRGB component to linear value
-    pivotRgb(n) {
-      n = n / 255;
-      return n <= 0.04045 ? n / 12.92 : Math.pow((n + 0.055) / 1.055, 2.4);
-    },
-
-    pivotXyz(n) {
-      return n > 0.008856 ? Math.pow(n, 1 / 3) : 7.787 * n + 16 / 116;
-    },
-
-    // Convert RGB to XYZ using the D65 illuminant
-    rgbToXyz(rgb) {
-      const r = this.pivotRgb(rgb.r);
-      const g = this.pivotRgb(rgb.g);
-      const b = this.pivotRgb(rgb.b);
-
-      // Observer = 2°, Illuminant = D65
-      const x = r * 0.4124 + g * 0.3576 + b * 0.1805;
-      const y = r * 0.2126 + g * 0.7152 + b * 0.0722;
-      const z = r * 0.0193 + g * 0.1192 + b * 0.9505;
-
-      return { x, y, z };
-    },
-
-    // Convert XYZ to LAB
-    xyzToLab(xyz) {
-      // Reference white D65
-      const refX = 0.95047;
-      const refY = 1.0;
-      const refZ = 1.08883;
-
-      const x = this.pivotXyz(xyz.x / refX);
-      const y = this.pivotXyz(xyz.y / refY);
-      const z = this.pivotXyz(xyz.z / refZ);
-
-      const l = 116 * y - 16;
-      const a = 500 * (x - y);
-      const b = 200 * (y - z);
-
-      return { l, a, b };
-    },
-
-    rgbToLab(rgb) {
-      const xyz = this.rgbToXyz(rgb);
-      return this.xyzToLab(xyz);
-    },
-
-    calculateDeltaE(color1, color2) {
-      // Get the RGB values using tinycolor
-      const rgb1 = tinycolor(color1).toRgb();
-      const rgb2 = tinycolor(color2).toRgb();
-
-      const lab1 = this.rgbToLab(rgb1);
-      const lab2 = this.rgbToLab(rgb2);
-
-      // Compute Delta E as the Euclidean distance in LAB space
-      const deltaE = Math.sqrt(
-        Math.pow(lab1.l - lab2.l, 2) +
-          Math.pow(lab1.a - lab2.a, 2) +
-          Math.pow(lab1.b - lab2.b, 2)
-      );
-
-      return deltaE;
-    },
-
-    calculateDeltaL(color1, color2) {
-      return Math.abs(
-        this.tinycolor(color1).getLuminance() -
-          this.tinycolor(color2).getLuminance()
-      );
-    },
-
-    getColorName(color) {
-      const colorInfo = ntc.name(color);
-      return colorInfo[1]; // Returns the color name
-    },
-
-    // Example usage:
-    // const deltaEValue = calculateDeltaE('#FF5733', '#33A1FF');
-    // console.log('Delta E:', deltaEValue);
+    colorName(color) { return ntc.name(color)[1]; },
   },
 };
 </script>
 
 <style lang="scss">
-// .outer {
-//   padding: 1rem;
-// }
-// .inner {
-//   padding: 0.3rem;
-//   &.intro {
-//     background: white;
-//     color: black;
-//     position: relative;
-//     left: -1rem;
-//   }
-// }
 </style>
 
-<!-- <template>
-  <div id="app">
-    <h1>Hello, World!</h1>
-  </div>
-</template>
-
-<script setup></script>
-
-<style scoped>
-#app {
-  text-align: center;
-  margin-top: 50px;
-}
-</style> -->
