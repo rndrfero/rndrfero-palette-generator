@@ -146,22 +146,15 @@ export default {
     code() {
       let ret = "";
 
-      this.inputColors.forEach(({ color, isBackground }) => {
-        if (!isBackground) {
-          return;
-        }
-
-        this.inputColors.forEach((x) => {
-          const color2 = x.color;
-
-          const pass = this.compare(color, color2);
-          if (!x.isText || !pass) {
+      this.inputColors.filter(({ isBackground }) => isBackground).forEach(({ color }) => {
+        this.inputColors.filter(({ isText }) => isText).forEach((inputColor) => {
+          
+          if (!this.compare(color, inputColor.color)) {
             return;
           }
 
-          ret +=
-            "{backgroundColor: '" + color + "', color: '" + color2 + "' },";
-          ret += " // " + x.name + " on " + name + "\n";
+          ret += `{backgroundColor: '${color}', color: '${inputColor.color}' },`
+          ret += `// ${this.colorName(color)} on ${this.colorName(inputColor.color)}\n`;
         });
       });
 
