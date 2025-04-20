@@ -102,7 +102,11 @@
 
     <div class="my-8">
       <div class="font-bold mb-2 text-2xl">Javascript code</div>
-      <code class="whitespace-pre">{{ code }}</code>
+      <textarea 
+        class="w-full h-48 p-2 font-mono text-xs bg-gray-100 border border-gray-300 rounded"
+        readonly
+        v-model="code"
+      ></textarea>
     </div>
   </section>
 </template>
@@ -173,8 +177,8 @@ export default {
             return;
           }
 
-          ret += `  { backgroundColor: '${value}', color: '${inputColor.value}' },`
-          ret += ` // ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
+          ret += `  // ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
+          ret += `  { backgroundColor: '${value}', color: '${inputColor.value}' },\n`;
         });
       });
 
