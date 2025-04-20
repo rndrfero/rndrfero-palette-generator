@@ -1,5 +1,12 @@
 # Nuxt Minimal Starter
 
+
+Readable Palette Checker
+
+A typography color testing tool that validates text-background combinations in your palette for optimal readability. Test your custom color schemes to ensure text is clear and easy to read for everyone.
+
+
+
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
