@@ -1,82 +1,51 @@
-# Nuxt Minimal Starter
-
-
-Readable Palette Checker
+# Readable Palette Checker
 
 A typography color testing tool that validates text-background combinations in your palette for optimal readability. Test your custom color schemes to ensure text is clear and easy to read for everyone.
 
+![Readable Palette Checker](public/screenshot.png)
 
+## Features
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+- Test text-background color combinations for readability
+- Generate and validate custom color palettes
+- Visual feedback on readability scores
+- Easy-to-use interface for color selection
+- Export your readable color combinations
 
-## Setup
+## Getting Started
 
-Make sure to install dependencies:
+### Prerequisites
 
+- Node.js (v16 or higher)
+- pnpm (recommended) or npm
+
+### Installation
+
+1. Clone the repository
 ```bash
-# npm
-npm install
+git clone https://github.com/rndrfero/readable-palette-checker.git
+cd readable-palette-checker
+```
 
-# pnpm
+2. Install dependencies
+```bash
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+3. Start the development server
 ```bash
-# npm
-npm run dev
-
-# pnpm
 pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+4. Open your browser and navigate to `http://localhost:3000`
 
-Build the application for production:
+## Built With
 
-```bash
-# npm
-npm run build
+- [Nuxt 3](https://nuxt.com/) - The Vue.js Framework
+- [Vue 3](https://vuejs.org/) - The Progressive JavaScript Framework
+- [Tailwind CSS](https://tailwindcss.com/) - A utility-first CSS framework
+- [TinyColor2](https://github.com/bgrins/TinyColor) - Color manipulation and conversion library
 
-# pnpm
-pnpm build
+## License
 
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
