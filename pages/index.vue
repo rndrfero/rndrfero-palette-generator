@@ -4,8 +4,11 @@
       <div class="font-bold mb-2 text-2xl">rndrfero's Readable Palette Checker</div>
     </div>
 
-    <div class="my-2 max-w-[800px]">
-      A typography color testing tool that validates text-background combinations in your palette for optimal readability. Test your custom color schemes to ensure text is clear and easy to read for everyone.
+    <div class="my-2 max-w-[600px]">
+      A typography color testing tool that validates text-background combinations in your palette for optimal readability. 
+    </div>
+    <div class="my-2 max-w-[600px]">
+       Test your custom color schemes to ensure text is clear and easy to read for everyone.
     </div>
 
     <!-- COLORS -->
