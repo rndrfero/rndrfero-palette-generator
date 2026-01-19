@@ -130,6 +130,19 @@ import tinycolor from "tinycolor2";
 import ntc from '~/utils/ntc';
 import { calculateDeltaL } from '~/utils/ColorMath';
 
+const DEFAULT_COLORS = [
+  { value: "#333333", isText: true, isBackground: true }, 
+  { value: "#FFFFFF", isText: true, isBackground: false },
+  { value: "#00ADD8", isText: true, isBackground: true }, 
+  { value: "#06587E", isText: true, isBackground: true }, 
+  { value: "#488D34", isText: true, isBackground: true }, 
+  { value: "#F7A501", isText: true, isBackground: true }, 
+  { value: "#ED5C03", isText: true, isBackground: true }, 
+  { value: "#DE2A1B", isText: true, isBackground: true }, 
+  { value: "#FF9F93", isText: true, isBackground: true }, 
+  { value: "#F96D5C", isText: true, isBackground: true }, 
+];
+
 export default {
   async asyncData(context) {
     await context.app.$cms.init(context);
@@ -138,18 +151,7 @@ export default {
     return {
       thresholdL: 0.3,
       thresholdE: 100,
-      colors: [
-        { value: "#333333", isText: true, isBackground: true }, 
-        { value: "#FFFFFF", isText: true, isBackground: false },
-        { value: "#00ADD8", isText: true, isBackground: true }, 
-        { value: "#06587E", isText: true, isBackground: true }, 
-        { value: "#488D34", isText: true, isBackground: true }, 
-        { value: "#F7A501", isText: true, isBackground: true }, 
-        { value: "#ED5C03", isText: true, isBackground: true }, 
-        { value: "#DE2A1B", isText: true, isBackground: true }, 
-        { value: "#FF9F93", isText: true, isBackground: true }, 
-        { value: "#F96D5C", isText: true, isBackground: true }, 
-      ]      
+      colors: [...DEFAULT_COLORS],
     };
   },
 
