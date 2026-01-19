@@ -38,7 +38,7 @@
             <span class="font-bold">{{ colorName(color.value) }}</span>
             <button 
               @click="removeColor(key)"
-              class="ml-auto text-red-500 hover:text-red-700 text-2xl disabled:opacity-50 disabled:cursor-not-allowed"
+              class="ml-auto text-red-500 hover:text-red-700 text-2xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               title="Remove color"
               :disabled="!canRemoveColors"
             >
@@ -58,7 +58,7 @@
         </div>
 
         <!-- Add new color -->
-        <div class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100 border-dashed flex items-center justify-center">
+        <div class="p-2 w-full max-w-[300px] border border-gray-300 rounded bg-gray-100 border-dashed flex items-center justify-center cursor-pointer">
           <button 
             @click="addColor"
             class="text-green-500 hover:text-green-700 text-3xl"
