@@ -38,13 +38,22 @@ import GitHubIcon from '~/assets/icons/GitHubIcon.vue';
 import TrashIcon from '~/assets/icons/TrashIcon.vue';
 
 const clearLocalStorage = () => {
-  // Show a confirmation dialog
-  if (confirm('This will clear your saved palette data. Are you sure you want to continue?')) {
-    // Clear all local storage
-    localStorage.clear();
-    
-    // Reload the page to reinitialize the application state
-    window.location.reload();
+  if (
+    !confirm(
+      'This will clear your saved palette data for this tool. Other sites will not be affected. Continue?'
+    )
+  ) {
+    return;
   }
+
+  const prefix = 'readable-palette-checker:';
+
+  Object.keys(localStorage)
+    .filter((key) => key.startsWith(prefix))
+    .forEach((key) => {
+      localStorage.removeItem(key);
+    });
+
+  window.location.reload();
 };
 </script> 

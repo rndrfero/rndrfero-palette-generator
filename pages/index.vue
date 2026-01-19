@@ -23,12 +23,17 @@
               v-model="color.value"
               class="w-8 h-8 rounded cursor-pointer"
             >
-            <input 
+            <label class="sr-only" :for="`color-hex-${key}`">
+              Hex color code
+            </label>
+            <input
+              :id="`color-hex-${key}`"
               type="text" 
               v-model="color.value"
               class="w-20 px-1 rounded border border-gray-300 bg-white"
               pattern="^#[0-9A-Fa-f]{6}$"
               title="Hex color code (e.g. #FF0000)"
+              aria-label="Hex color code"
             >
             <span class="font-bold">{{ colorName(color.value) }}</span>
             <button 
@@ -70,16 +75,22 @@
     <div class="my-8">
       <div class="font-bold mb-2 text-2xl">Luminance contrast</div>
       <div>
-        Luminance delta threshold: 
+        <label for="luminance-threshold" class="mr-2">
+          Luminance delta threshold:
+        </label>
         <input
+          id="luminance-threshold"
           v-model="thresholdL"
           type="range"
           :min="0.0"
           :max="1.0"
           :step="0.01"
-          class="slider"
+          class="slider align-middle"
+          aria-label="Luminance delta threshold"
         >
-        {{ thresholdL }}
+        <span class="ml-2 text-sm font-mono">
+          {{ Number(thresholdL).toFixed(2) }}
+        </span>
       </div>
     </div>
 
@@ -154,17 +165,17 @@ export default {
     },
     grid() {
       return this.backgroundColors
-        .map(({ value }) => {
-          const row = { color: value, colors: [] };
-          
-          this.textColors.forEach((x) => {
-            if (this.compare(value, x.value)) {
-              row.colors.push(x.value);
-            }
-          });
-          return row;
+        .map(({ value: backgroundValue }) => {
+          const validTextColors = this.textColors
+            .map(({ value: textValue }) => textValue)
+            .filter((textValue) => this.compare(backgroundValue, textValue));
+
+          return {
+            color: backgroundValue,
+            colors: validTextColors,
+          };
         })
-        .filter(row => row.colors.length > 0);
+        .filter((row) => row.colors.length > 0);
     },
     count() {
       return this.grid.reduce((total, row) => {
@@ -172,20 +183,23 @@ export default {
       }, 0);
     },
     code() {
-      let ret = "const palette = [\n";
+      const lines = ["const palette = ["];
 
-      this.backgroundColors.forEach(({ value }) => {
-        this.textColors.forEach((inputColor) => {
-          if (!this.compare(value, inputColor.value)) {
+      this.backgroundColors.forEach(({ value: backgroundValue }) => {
+        this.textColors.forEach(({ value: textValue }) => {
+          if (!this.compare(backgroundValue, textValue)) {
             return;
           }
 
-          ret += `  // ${this.colorName(value)} on ${this.colorName(inputColor.value)}\n`;
-          ret += `  { backgroundColor: '${value}', color: '${inputColor.value}' },\n`;
+          lines.push(
+            `  // ${this.colorName(textValue)} on ${this.colorName(backgroundValue)}`,
+            `  { backgroundColor: '${backgroundValue}', color: '${textValue}' },`
+          );
         });
       });
 
-      return ret + "];";
+      lines.push("];");
+      return lines.join("\n");
     },
   },
 
