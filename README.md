@@ -2,6 +2,12 @@
 
 A typography color testing tool that validates text-background combinations in your palette for optimal readability. Test your custom color schemes to ensure text is clear and easy to read for everyone.
 
+## Check it out!
+
+[https://readable-palette-checker.rndrfero.com/](https://readable-palette-checker.rndrfero.com/)
+
+## Screenshot
+
 ![Readable Palette Checker](public/screenshot.png)
 
 ## Features
